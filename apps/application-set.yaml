@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: myapp
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: kind-knative-test
+            url: https://kubernetes.default.svc
+            values:
+              destination: "newyork"
+  template:
+    metadata:
+      name: "{{cluster}}-myapp"
+    spec:
+      project: default
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+      source:
+        repoURL: https://github.com/burrsutter/doks-argocd.git
+        targetRevision: main
+        path: "mystuff/overlays/newyork"
+      destination:
+        server: "{{url}}"
+        namespace: "daryl"

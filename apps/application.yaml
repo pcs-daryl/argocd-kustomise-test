@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: test-application
+  namespace: argocd
+spec:
+  destination:
+    name: ""
+    namespace: testing
+    server: https://kubernetes.default.svc
+  source:
+    path: guestbook/
+    repoURL: https://github.com/argoproj/argocd-example-apps
+    targetRevision: HEAD
+  sources: []
+  project: default
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
